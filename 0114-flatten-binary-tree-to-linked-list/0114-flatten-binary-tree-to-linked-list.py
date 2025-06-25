@@ -6,24 +6,21 @@
 #         self.right = right
 class Solution(object):
     def flatten(self, root):
-        """
-        :type root: Optional[TreeNode]
-        :rtype: None Do not return anything, modify root in-place instead.
-        """
-        nodes = []
+        if not root:
+            return
+        stack = [root]
+        prev = None
+        while stack:
+            node = stack.pop()
+            if prev:
+                prev.right = node
+                prev.left = None
+            # 注意：先右再左，保证先序遍历顺序
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+            prev = node
 
-        # Step 1: 先序遍历，收集节点
-        def preorder(node):
-            if node:
-                nodes.append(node)
-                preorder(node.left)
-                preorder(node.right)
-        
-        preorder(root)
 
-        # Step 2: 重新连接节点
-        for i in range(1, len(nodes)):
-            prev = nodes[i - 1]
-            curr = nodes[i]
-            prev.left = None
-            prev.right = curr
+
